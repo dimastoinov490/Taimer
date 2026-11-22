@@ -1,0 +1,6 @@
+{
+  "name": "Stress",
+  "description": "Calm breathing and tactile stress-relief timer app with radial coral-red glow, adjustable duration presets, 1-10 haptic intensity wheel, and sound/vibration controls.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
