@@ -9,6 +9,9 @@ on:
       - main
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -31,28 +34,12 @@ jobs:
 
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
-
-      - name: Configure Android SDK environment variables and install required components
-        shell: bash
-        run: |
-          SDK_PATH="${ANDROID_SDK_ROOT:-${ANDROID_HOME:-/usr/local/lib/android/sdk}}"
-          echo "ANDROID_HOME=${SDK_PATH}" >> "$GITHUB_ENV"
-          echo "ANDROID_SDK_ROOT=${SDK_PATH}" >> "$GITHUB_ENV"
-          export ANDROID_HOME="${SDK_PATH}"
-          export ANDROID_SDK_ROOT="${SDK_PATH}"
-          export PATH="${SDK_PATH}/cmdline-tools/latest/bin:${SDK_PATH}/platform-tools:${PATH}"
-
-          if ! command -v sdkmanager >/dev/null 2>&1; then
-            echo "::error::Android sdkmanager not found in ${SDK_PATH}."
-            exit 1
-          fi
-
-          yes | sdkmanager --licenses >/dev/null || true
-          sdkmanager --install \
-            "platform-tools" \
-            "build-tools;36.0.0" \
-            "platforms;android-36" \
-            "platforms;android-36.1"
+        with:
+          packages: |
+            platform-tools
+            build-tools;36.0.0
+            platforms;android-36
+            platforms;android-36.1
 
       - name: Set up Gradle cache
         uses: gradle/actions/setup-gradle@v4
